@@ -564,7 +564,7 @@ adjabil(int oldlevel, int newlevel)
     }
 
     while (abil || rabil) {
-        long prevabil;
+        unsigned int prevabil;
 
         /* Have we finished with the intrinsics list? */
         if (!abil || !abil->ability) {
@@ -718,7 +718,7 @@ adjalign(int n)
             u.ualign.record = newalign;
     } else if (newalign > u.ualign.record) {
         u.ualign.record = newalign;
-        if (u.ualign.record > ALIGNLIM)
+        if (u.ualign.record > ((int)(ALIGNLIM)))
             u.ualign.record = ALIGNLIM;
     }
 }

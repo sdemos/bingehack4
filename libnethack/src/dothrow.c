@@ -1622,7 +1622,7 @@ breakobj(struct obj *obj,
             struct monst *shkp = shop_keeper(level, *o_shop);
 
             if (shkp) { /* (implies *o_shop != '\0') */
-                static long lastmovetime = 0L;
+                static unsigned long lastmovetime = 0L;
                 static boolean peaceful_shk = FALSE;
 
                 /* We want to base shk actions on her peacefulness at start of
