@@ -1388,7 +1388,7 @@ void
 rot_organic(void *arg, long timeout /* unused */ )
 {
     struct obj *obj = (struct obj *)arg;
-
+    (void)timeout;
     while (Has_contents(obj)) {
         /* We don't need to place contained object on the floor first, but we
            do need to update its map coordinates. */

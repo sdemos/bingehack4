@@ -164,7 +164,7 @@ extern struct multishot {
 
 extern struct dig_info {        /* apply.c, hack.c */
     int effort;
-    int lastdigtime;
+    unsigned int lastdigtime;
     d_level level;
     coord pos;
     boolean down, chew, warned, quiet;
