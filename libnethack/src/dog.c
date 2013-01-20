@@ -663,7 +663,7 @@ dogfood(struct monst *mon, struct obj *obj)
         if (mon->data == &mons[PM_GHOUL])
             return (obj->otyp == CORPSE &&
                     peek_at_iced_corpse_age(obj) + 50L <=
-                    moves) ? DOGFOOD : TABU;
+                    (int)moves) ? DOGFOOD : TABU;
 
         if (!carni && !herbi)
             return obj->cursed ? UNDEF : APPORT;
@@ -683,7 +683,7 @@ dogfood(struct monst *mon, struct obj *obj)
                 return POISON;
             return carni ? CADAVER : MANFOOD;
         case CORPSE:
-            if ((peek_at_iced_corpse_age(obj) + 50L <= moves &&
+            if ((peek_at_iced_corpse_age(obj) + 50L <= (int)moves &&
                  obj->corpsenm != PM_LIZARD && obj->corpsenm != PM_LICHEN &&
                  mon->data->mlet != S_FUNGUS) ||
                 (acidic(&mons[obj->corpsenm]) && !resists_acid(mon)) ||
