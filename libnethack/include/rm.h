@@ -500,7 +500,7 @@ struct level {
 
     struct wseg *wheads[MAX_NUM_WORMS], *wtails[MAX_NUM_WORMS];
     int wgrowtime[MAX_NUM_WORMS];
-    int lastmoves;      /* when the level was last visited */
+    unsigned int lastmoves;      /* when the level was last visited */
     int nroom;
     int nsubroom;
     int doorindex;

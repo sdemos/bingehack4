@@ -111,7 +111,7 @@ static int swallow_to_effect(int, int);
 static void display_warning(struct monst *);
 
 static int check_pos(struct level *lev, int, int, int);
-static int set_twall(struct level *lev, int, int, int, int, int, int, int, int);
+static int set_twall(struct level *lev, int, int, int, int, int, int);
 static int set_wall(struct level *lev, int, int, int);
 static int set_corn(struct level *lev, int, int, int, int, int, int, int, int);
 static int set_crosswall(struct level *lev, int, int);
@@ -1820,18 +1820,17 @@ check_pos(struct level *lev, int x, int y, int which)
 
 /* Return the wall mode for a T wall. */
 static int
-set_twall(struct level *lev, int x0, int y0, int x1, int y1, int x2, int y2,
-          int x3, int y3)
+set_twall(struct level *lev, int x0, int y0, int x1, int y1, int x2, int y2)
 {
-    int wmode, is_1, is_2, is_3;
+    int wmode, is_0, is_1, is_2;
 
-    is_1 = check_pos(lev, x1, y1, WM_T_LONG);
-    is_2 = check_pos(lev, x2, y2, WM_T_BL);
-    is_3 = check_pos(lev, x3, y3, WM_T_BR);
-    if (more_than_one(is_1, is_2, is_3)) {
+    is_0 = check_pos(lev, x0, y0, WM_T_LONG);
+    is_1 = check_pos(lev, x1, y1, WM_T_BL);
+    is_2 = check_pos(lev, x2, y2, WM_T_BR);
+    if (more_than_one(is_0, is_1, is_2)) {
         wmode = 0;
     } else {
-        wmode = is_1 + is_2 + is_3;
+        wmode = is_0 + is_1 + is_2;
     }
     return wmode;
 }
@@ -1941,19 +1940,19 @@ set_wall_state(struct level *lev)
                 break;
             case TDWALL:
                 wmode =
-                    set_twall(lev, x, y, x, y - 1, x - 1, y + 1, x + 1, y + 1);
+                    set_twall(lev, x, y - 1, x - 1, y + 1, x + 1, y + 1);
                 break;
             case TUWALL:
                 wmode =
-                    set_twall(lev, x, y, x, y + 1, x + 1, y - 1, x - 1, y - 1);
+                    set_twall(lev, x, y + 1, x + 1, y - 1, x - 1, y - 1);
                 break;
             case TLWALL:
                 wmode =
-                    set_twall(lev, x, y, x + 1, y, x - 1, y - 1, x - 1, y + 1);
+                    set_twall(lev, x + 1, y, x - 1, y - 1, x - 1, y + 1);
                 break;
             case TRWALL:
                 wmode =
-                    set_twall(lev, x, y, x - 1, y, x + 1, y + 1, x + 1, y - 1);
+                    set_twall(lev, x - 1, y, x + 1, y + 1, x + 1, y - 1);
                 break;
             case TLCORNER:
                 wmode =

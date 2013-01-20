@@ -720,7 +720,7 @@ dodown(void)
 
                 for (obj = invent; obj; obj = obj->nobj) {
                     if (obj->oartifact && artifact_has_invprop(obj, LEVITATION)) {
-                        if (obj->age < moves)
+                        if (obj->age < (int)moves)
                             obj->age = moves + rnz(100);
                         else
                             obj->age += rnz(100);
@@ -1513,7 +1513,7 @@ revive_corpse(struct obj *corpse)
 revive_mon(void *arg, long timeout)
 {
     struct obj *body = (struct obj *)arg;
-
+    (void)timeout;
     /* if we succeed, the corpse is gone, otherwise, rot it away */
     if (!revive_corpse(body)) {
         if (is_rider(&mons[body->corpsenm]))
