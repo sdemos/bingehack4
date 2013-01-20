@@ -1158,7 +1158,7 @@ eatcorpse(struct obj *otmp)
 
             sick_time = (long)rn1(10, 10);
             /* make sure new ill doesn't result in improvement */
-            if (Sick && (sick_time > Sick))
+            if (Sick && (sick_time > (int)Sick))
                 sick_time = (Sick > 1L) ? Sick - 1L : 1L;
             if (!uniq)
                 sprintf(buf, "rotted %s", corpse_xname(otmp, TRUE));
@@ -1991,7 +1991,7 @@ doeat(struct obj *otmp)
         victual.reqtime = objects[otmp->otyp].oc_delay;
         if (otmp->otyp != FORTUNE_COOKIE &&
             (otmp->cursed ||
-             (((moves - otmp->age) > (int)otmp->blessed ? 50 : 30) &&
+             (((int)(moves - otmp->age) > (int)otmp->blessed ? 50 : 30) &&
               (otmp->orotten || !rn2(7))))) {
 
             if (rottenfood(otmp)) {
