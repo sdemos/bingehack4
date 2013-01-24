@@ -33,7 +33,8 @@ base64size(int n)
 static void
 base64_encode_binary(const unsigned char *in, char *out, int len)
 {
-    int i, pos, rem;
+    unsigned int i;
+    int pos, rem;
     unsigned long olen = compressBound(len);
     unsigned char *o = malloc(olen);
 
@@ -43,7 +44,7 @@ base64_encode_binary(const unsigned char *in, char *out, int len)
 
     pos = sprintf(out, "$%d$", len);
 
-    if (pos + olen >= len) {
+    if (pos + (long)olen >= len) {
         pos = 0;
         olen = len;
     } else
