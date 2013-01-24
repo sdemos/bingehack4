@@ -265,7 +265,7 @@ sengr_at(const char *s, xchar x, xchar y)
 {
     struct engr *ep = engr_at(level, x, y);
 
-    return (ep && ep->engr_type != HEADSTONE && ep->engr_time <= moves &&
+    return (ep && ep->engr_type != HEADSTONE && ep->engr_time <= (int)moves &&
             strstri(ep->engr_txt, s) != 0);
 }
 
