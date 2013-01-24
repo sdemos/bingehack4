@@ -102,7 +102,7 @@ mwrite(struct memfile *mf, const void *buf, unsigned int num)
 {
     boolean do_realloc = FALSE;
 
-    while (mf->len < mf->pos + num) {
+    while (mf->len < mf->pos + (long)num) {
         mf->len += 4096;
         do_realloc = TRUE;
     }
@@ -189,7 +189,7 @@ mdiffwrite(struct memfile *mf, const void *buf, unsigned int num)
 {
     boolean do_realloc = FALSE;
 
-    while (mf->difflen < mf->diffpos + num) {
+    while (mf->difflen < mf->diffpos + (long)num) {
         mf->difflen += 4096;
         do_realloc = TRUE;
     }
@@ -274,7 +274,7 @@ mtag(struct memfile *mf, long tagdata, enum memfile_tagtype tagtype)
 void
 mread(struct memfile *mf, void *buf, unsigned int len)
 {
-    int rlen = min(len, mf->len - mf->pos);
+    int rlen = min((long)len, mf->len - mf->pos);
 
     memcpy(buf, &mf->buf[mf->pos], rlen);
     mf->pos += rlen;
