@@ -208,7 +208,7 @@ replay_set_logfile(int logfd)
 void
 replay_begin(void)
 {
-    long filesize;
+    unsigned long filesize;
     int i, dupped_fd;
     boolean recovery = FALSE;
 
@@ -368,7 +368,7 @@ next_log_token(void)
                 rbuflen = 256;
             rbuf = realloc(rbuf, rbuflen);
         }
-        if (rbpos + filepos >= loginfo.endpos) {
+        if (rbpos + filepos >= (long)loginfo.endpos) {
             rbuf[rbpos] = 0;
             return rbpos ? rbuf : NULL;
         }
