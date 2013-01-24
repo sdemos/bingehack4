@@ -157,6 +157,9 @@ dump_display_menu(struct nh_menuitem *items, int icount, const char *title,
     int i, col, extra;
     int colwidth[10];
     char *start, *tab;
+    (void)how;
+    (void)placement_hint;
+    (void)result;
 
     if (!dumpfp)
         return 0;
@@ -176,7 +179,7 @@ dump_display_menu(struct nh_menuitem *items, int icount, const char *title,
             start = tab + 1;
             col++;
         }
-        colwidth[col] = max(colwidth[col], strlen(start));
+        colwidth[col] = max(colwidth[col], (int)strlen(start));
     }
 
     if (!title)
@@ -216,6 +219,9 @@ dump_display_objects(struct nh_objitem *items, int icount, const char *title,
                      int how, int placement_hint, struct nh_objresult *result)
 {
     int i;
+    (void)how;
+    (void)placement_hint;
+    (void)result;
 
     if (!dumpfp)
         return 0;
@@ -240,6 +246,13 @@ static void
 dump_outrip(struct nh_menuitem *items, int icount, boolean ts, const char *name,
             int gold, const char *killbuf, int end_how, int year)
 {
+    (void)ts;
+    (void)name;
+    (void)gold;
+    (void)killbuf;
+    (void)end_how;
+    (void)year;
+    
     dump_display_menu(items, icount, "Final status:", PICK_NONE,
                       PLHINT_ANYWHERE, NULL);
 }
