@@ -11,24 +11,23 @@ const struct worn {
     long w_mask;
     struct obj **w_obj;
 } worn[] = {
-    {
-    W_ARM, &uarm}, {
-    W_ARMC, &uarmc}, {
-    W_ARMH, &uarmh}, {
-    W_ARMS, &uarms}, {
-    W_ARMG, &uarmg}, {
-    W_ARMF, &uarmf}, {
-    W_ARMU, &uarmu}, {
-    W_RINGL, &uleft}, {
-    W_RINGR, &uright}, {
-    W_WEP, &uwep}, {
-    W_SWAPWEP, &uswapwep}, {
-    W_QUIVER, &uquiver}, {
-    W_AMUL, &uamul}, {
-    W_TOOL, &ublindf}, {
-    W_BALL, &uball}, {
-    W_CHAIN, &uchain}, {
-    0, 0}
+    {W_ARM, &uarm},
+    {W_ARMC, &uarmc},
+    {W_ARMH, &uarmh},
+    {W_ARMS, &uarms},
+    {W_ARMG, &uarmg},
+    {W_ARMF, &uarmf},
+    {W_ARMU, &uarmu},
+    {W_RINGL, &uleft},
+    {W_RINGR, &uright},
+    {W_WEP, &uwep},
+    {W_SWAPWEP, &uswapwep},
+    {W_QUIVER, &uquiver},
+    {W_AMUL, &uamul},
+    {W_TOOL, &ublindf},
+    {W_BALL, &uball},
+    {W_CHAIN, &uchain},
+    {0, 0}
 };
 
 /* This only allows for one blocking item per property */

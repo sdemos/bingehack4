@@ -663,7 +663,7 @@ Ring_on(struct obj *obj)
     case RIN_POLYMORPH_CONTROL:
     case RIN_FREE_ACTION:
     case RIN_SLOW_DIGESTION:
-        if (obj->oartifact != ART_RING_OF_POWER &&
+        if (obj->oartifact == ART_RING_OF_POWER &&
             !oldprop && !HInvis && !BInvis && !Blind) {
             newsym(u.ux,u.uy);
             self_invis_message();
@@ -1107,9 +1107,9 @@ cursed(struct obj *otmp)
                 (is_boots(otmp) || is_gloves(otmp) || otmp->otyp == LENSES ||
                 otmp->quan > 1L)
                 ? "They are" : "It is");
-            otmp->bknown = TRUE;
-            return 1;
         }
+        otmp->bknown = TRUE;
+        return 1;
     }
     return 0;
 }
@@ -1890,11 +1890,12 @@ do_takeoff(void)
             Ring_off(uright);
     } else if (taking_off == LEFT_RING || taking_off == RIGHT_RING) {
         otmp = taking_off == LEFT_RING ? uleft : uright;
-        if (!cursed(otmp))
+        if (!cursed(otmp)) {
             Ring_off(otmp);
-        if (otmp->oartifact == ART_RING_OF_POWER) {
-            if (!u.uhave.ring_of_power_worn) impossible("not wearing the ring of power?");
-            u.uhave.ring_of_power_worn = 0;
+            if (otmp->oartifact == ART_RING_OF_POWER) {
+                if (!u.uhave.ring_of_power_worn) impossible("not wearing the ring of power?");
+                u.uhave.ring_of_power_worn = 0;
+            }
         }
     } else if (taking_off == WORN_BLINDF) {
         if (!cursed(ublindf))
