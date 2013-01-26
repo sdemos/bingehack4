@@ -225,7 +225,7 @@ static const struct artifact const_artilist[] = {
       CREATE_PORTAL, A_NEUTRAL, PM_WIZARD, NON_PM, 4000L),
 
     A("The Ring of Power", RIN_SLOW_DIGESTION,
-      (SPFX_RESTR | SPFX_INTEL), (SPFX_INVIS), 0, //It speaks, it is just handled elsewhere (allmain?)
+      (SPFX_RESTR | SPFX_INTEL | SPFX_INVIS), 0, 0, //It speaks, it is just handled elsewhere (allmain?)
       NO_ATTK, NO_DFNS, NO_CARY, 
       0, A_NONE, NON_PM, NON_PM, 5000L),
 /*
