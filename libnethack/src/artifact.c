@@ -1259,7 +1259,7 @@ arti_invoke(struct obj *obj)
 
     if (oart->inv_prop > LAST_PROP) {
         /* It's a special power, not "just" a property */
-        if (obj->age > moves) {
+        if (obj->age > (long)moves) {
             /* the artifact is tired :-) */
             pline("You feel that %s %s ignoring you.", the(xname(obj)),
                   otense(obj, "are"));
@@ -1281,7 +1281,7 @@ arti_invoke(struct obj *obj)
             }
         case HEALING:{
                 int healamt = (u.uhpmax + 1 - u.uhp) / 2;
-                long creamed = (long)u.ucreamed;
+                unsigned creamed = u.ucreamed;
 
                 if (Upolyd)
                     healamt = (u.mhmax + 1 - u.mh) / 2;
@@ -1438,7 +1438,7 @@ arti_invoke(struct obj *obj)
             u.uprops[oart->inv_prop].intrinsic;
         boolean on = (eprop & W_ARTI) != 0;  /* true if invoked prop just set */
 
-        if (on && obj->age > moves) {
+        if (on && obj->age > (long)moves) {
             /* the artifact is tired :-) */
             u.uprops[oart->inv_prop].extrinsic ^= W_ARTI;
             pline("You feel that %s %s ignoring you.", the(xname(obj)),
