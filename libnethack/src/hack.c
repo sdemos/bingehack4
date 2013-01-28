@@ -225,7 +225,7 @@ moverock(schar dx, schar dy)
 
             {
                 /* note: reset to zero after save/restore cycle */
-                static long lastmovetime;
+                static unsigned int lastmovetime;
 
                 if (!u.usteed) {
                     if (moves > lastmovetime + 2 || moves < lastmovetime)
@@ -519,7 +519,7 @@ invocation_pos(const d_level * dlev, xchar x, xchar y)
 }
 
 static void
-autoexplore_msg(const char *text, int mode)
+autoexplore_msg(const char *text)
 {
     if (iflags.autoexplore) {
         char tmp[BUFSZ];
@@ -648,11 +648,11 @@ test_move(int ux, int uy, int dx, int dy, int dz, int mode)
              level->locations[x][y].seenv)) {
             if (mode == DO_MOVE) {
                 if (t && t->tseen)
-                    autoexplore_msg("a trap", mode);
+                    autoexplore_msg("a trap");
                 else if (is_pool(level, x, y))
-                    autoexplore_msg("a body of water", mode);
+                    autoexplore_msg("a body of water");
                 else if (is_lava(level, x, y))
-                    autoexplore_msg("a pool of lava", mode);
+                    autoexplore_msg("a pool of lava");
                 if (flags.travel)
                     return FALSE;
             }
@@ -673,14 +673,14 @@ test_move(int ux, int uy, int dx, int dy, int dz, int mode)
         )) {
         /* Can't move at a diagonal out of a doorway with door. */
         if (mode == DO_MOVE)
-            autoexplore_msg("the doorway", mode);
+            autoexplore_msg("the doorway");
         return FALSE;
     }
 
     if (sobj_at(BOULDER, level, x, y) && (In_sokoban(&u.uz) || !Passes_walls)) {
         if (!(Blind || Hallucination) && (flags.run >= 2) && mode != TEST_TRAV) {
             if (sobj_at(BOULDER, level, x, y) && mode == DO_MOVE)
-                autoexplore_msg("a boulder", mode);
+                autoexplore_msg("a boulder");
             return FALSE;
         }
         if (mode == DO_MOVE) {
@@ -1156,7 +1156,7 @@ domove(schar dx, schar dy, schar dz)
                     mtmp->m_ap_type != M_AP_OBJECT) ||
                    Protection_from_shape_changers)) || sensemon(mtmp))) {
                 nomul(0, NULL);
-                autoexplore_msg(Monnam(mtmp), DO_MOVE);
+                autoexplore_msg(Monnam(mtmp));
                 return 0;
             }
         }
@@ -2283,7 +2283,7 @@ maybe_wail(void)
         TELEPORT_CONTROL, STEALTH, FAST, INVIS
     };
 
-    if (moves <= wailmsg + 50)
+    if ((long)moves <= wailmsg + 50)
         return;
 
     wailmsg = moves;
