@@ -32,11 +32,12 @@ enum {
     DRUNK_THEFT = 0,
     DRUNK_BLIND = 1,
     DRUNK_ENTANGLE = 2,
+    DRUNK_ROLL = 3,
     /*
      * This should always be the last item, and should be increased
      * when adding a new drunken boxing outcome.  
      */
-    DRUNK_NOTHING = 3
+    DRUNK_NOTHING = 4
 };
 
 #define BLIND_TIME 25 /* Must be less than 127 (mon->mblinded is only 7 bits) */
@@ -489,16 +490,16 @@ known_hitum(struct monst *mon, int *mhit, const struct attack *uattk, schar dx,
     }
 
     /* Don't do these on pets, or on dead things. */
-    if (drunkenboxing() && !mon->mtame && malive && *mhit) {
+    /* You get a 1/4 chance to do *something* when attacking. */
+    if (drunkenboxing() && !mon->mtame && malive && *mhit && rn2(4)) {
             int tmp;
             char msg[BUFSZ];
             struct obj *dbobj;
 
-            /* You get a 1/4 chance to do *something* when attacking. */
-            chance = rnd(((DRUNK_NOTHING + 1) * 4) - 1);
+            chance = rn2(DRUNK_NOTHING);
             switch(chance) {
                     case DRUNK_THEFT:
-                            sprintf(msg, "Siezing an opportunity, you rifle through the %s's pack!", mon->data->mname);
+                            sprintf(msg, "Siezing an opportunity, you rifle through %s's pack!", mon_nam(mon));
                             dbobj = display_minventory(mon, MINV_ALL, msg);
                             if (dbobj) {
                                     if (!dbobj->owornmask) {
@@ -518,11 +519,10 @@ known_hitum(struct monst *mon, int *mhit, const struct attack *uattk, schar dx,
                             else
                                     pline("You stole nothing.");
 
-                            return(malive);
                             break;
                     case DRUNK_BLIND:
                             if (can_blnd(&youmonst, mon, AT_CLAW, NULL)) {
-                                    pline("You poke the %s in the eye for good measure.", mon->data->mname);
+                                    pline("You poke %s in the eye for good measure.", mon_nam(mon));
                                     mon->mcansee = 0;
                                     tmp = rn1(25, 21);
                                     /*
@@ -536,23 +536,28 @@ known_hitum(struct monst *mon, int *mhit, const struct attack *uattk, schar dx,
                                             mon->mblinded += tmp;
                             }
                             else
-                                    pline("You try to poke the %s in the eye, but can't.", mon->data->mname);
+                                    pline("You try to poke %s in the eye, but can't.", mon_nam(mon));
 
-                            return(malive);
                             break;
                     case DRUNK_ENTANGLE:
                             dbobj = random_type(ARMOR_CLASS, mon);
                             if (dbobj) {
                                     if (dbobj->owornmask) {
-                                            pline("You grapple with the %s and remove %s.", mon->data->mname, doname(dbobj));
+                                            pline("You grapple with %s and remove %s.", mon_nam(mon), doname(dbobj));
                                             update_mon_intrinsics(mon, dbobj, FALSE, FALSE);
                                             dbobj->owornmask = 0L;
                                     }
                             }
                             else
-                                    pline("You attempt to disrobe the %s but fail.", mon->data->mname);
+                                    pline("You attempt to disrobe %s but fail.", mon_nam(mon));
 
-                            return(malive);
+                            break;
+                    case DRUNK_ROLL:
+                            if (!level->flags.noteleport && !Punished) {
+                                pline("You tumble past %s!", mon_nam(mon));
+                                teleds(mon->mx, mon->my, FALSE);
+                                rloc_to(mon, u.ux0, u.uy0);
+                            }
                             break;
             }
     }
