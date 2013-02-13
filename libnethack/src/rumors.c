@@ -5,6 +5,7 @@
 #include "hack.h"
 #include "lev.h"
 #include "dlb.h"
+#include "achieve.h"
 
 /*  [note: this comment is fairly old, but still accurate for 3.1]
  * Rumors have been entirely rewritten to speed up the access.  This is
@@ -196,6 +197,7 @@ outrumor(int truth,     /* 1=true, -1=false, 0=either 3=potter*/
               (!rn2(4) ? "nonchalantly "
                : (!rn2(3) ? "casually " : (rn2(2) ? "excitedly " : ""))));
         verbalize("%s", line);
+        award_achievement(AID_POTTER_CHAT);
         return;
     case BY_COOKIE:
         pline(fortune_msg);

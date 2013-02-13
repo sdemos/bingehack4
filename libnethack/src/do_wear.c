@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 static long takeoff_mask = 0L;
 static long taking_off = 0L;
@@ -1592,6 +1593,9 @@ find_ac(void)
         u.uac = uac;
         iflags.botl = 1;
     }
+    if (u.uac < 0) award_achievement(AID_TERRIBLE_AC);
+    if (u.uac >= 40 && magic_negation(%youmonst) >= 3)
+        award_achievement(AID_AWESOME_AC);
 }
 
 

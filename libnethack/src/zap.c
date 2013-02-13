@@ -350,6 +350,7 @@ bhitm(struct monst *mtmp, struct obj *otmp)
         if (mtmp->mhp > 0 && cansee(bhitpos.x, bhitpos.y) && !canspotmon(mtmp))
             map_invisible(bhitpos.x, bhitpos.y);
     }
+    if (dbldam) award_achievement(AID_USE_ARTIFACT_KNI);
     return 0;
 }
 
@@ -669,6 +670,7 @@ revive(struct obj *obj)
                                   Monnam(ghost));
                         mondead(ghost);
                         recorporealization = TRUE;
+                        add_achievement_progress(AID_RESURRECT_PLAYERS, 1);
                         newsym(x2, y2);
                     }
                     /* don't mess with obj->oxlth here */

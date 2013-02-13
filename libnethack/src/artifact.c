@@ -5,6 +5,7 @@
 #include "hack.h"
 #include "artifact.h"
 #include "artilist.h"
+#include "achieve.h"
 /*
  * Note:  both artilist[] and artiexist[] have a dummy element #0,
  *        so loops over them should normally start at #1.  The primary
@@ -562,6 +563,7 @@ touch_artifact(struct obj *obj, struct monst *mon)
         if (!yours)
             return 0;
         pline("You are blasted by %s power!", s_suffix(the(xname(obj))));
+        award_achievement(AID_ARTIFACT_BLAST);
         dmg = dice((Antimagic ? 2 : 4), (self_willed ? 10 : 4));
         sprintf(buf, "touching %s", oart->name);
         losehp(dmg, buf, KILLED_BY);
@@ -983,6 +985,7 @@ artifact_hit_behead(struct monst *magr, struct monst *mdef, struct obj *otmp,
             }
             *dmgptr = 2 * mdef->mhp + FATAL_DAMAGE_MODIFIER;
             pline("%s cuts %s in half!", wepdesc, mon_nam(mdef));
+            if (Role_if(PM_SAMURAI)) award_achievement(AID_USE_ARTIFACT_SAM);
             otmp->dknown = TRUE;
             return TRUE;
         } else {
@@ -1301,6 +1304,7 @@ arti_invoke(struct obj *obj)
                     Slimed = 0L;
                 if (Blinded > creamed)
                     make_blinded(creamed, FALSE);
+                if (Role_if(PM_HEALER)) award_achievement(AID_USE_ARTIFACT_HEA);
                 iflags.botl = 1;
                 break;
             }
@@ -1314,6 +1318,7 @@ arti_invoke(struct obj *obj)
                 if (epboost) {
                     pline("You feel re-energized.");
                     u.uen += epboost;
+                    if (Role_if(PM_PRIEST)) award_achievement(AID_USE_ARTIFACT_PRI);
                     iflags.botl = 1;
                 } else
                     goto nothing_special;
@@ -1325,6 +1330,7 @@ arti_invoke(struct obj *obj)
                                          */
                     return 0;
                 }
+                if (Role_if(PM_ROGUE)) award_achievement(AID_USE_ARTIFACT_ROG);
                 break;
             }
         case CHARGE_OBJ:{
@@ -1339,10 +1345,12 @@ arti_invoke(struct obj *obj)
                                             !oart->role);
                 recharge(otmp, b_effect ? 1 : obj->cursed ? -1 : 0);
                 update_inventory();
+                if (Role_if(PM_TOURIST)) award_achievement(AID_USE_ARTIFACT_TOU);
                 break;
             }
         case LEV_TELE:
             level_tele();
+            if (Role_if(PM_VALKYRIE)) award_achievement(AID_USE_ARTIFACT_VAL);
             break;
         case CREATE_PORTAL:{
                 int i, num_ok_dungeons, last_ok_dungeon = 0;
@@ -1403,12 +1411,14 @@ arti_invoke(struct obj *obj)
                         pline("You are surrounded by a shimmering sphere!");
                     else
                         pline("You feel weightless for a moment.");
+                    if (Role_if(PM_WIZARD)) award_achievement(AID_USE_ARTIFACT_WIZ);
                     goto_level(&newlev, FALSE, FALSE, FALSE);
                 }
                 break;
             }
         case ENLIGHTENING:
             enlightenment(0);
+            if (Role_if(PM_MONK)) award_achievement(AID_USE_ARTIFACT_MON);
             break;
         case CREATE_AMMO:{
                 struct obj *otmp = mksobj(level, ARROW, TRUE, FALSE);
@@ -1430,6 +1440,7 @@ arti_invoke(struct obj *obj)
                 otmp->owt = weight(otmp);
                 hold_another_object(otmp, "Suddenly %s out.",
                                     aobjnam(otmp, "fall"), NULL);
+                if (Role_if(PM_RANGER)) award_achievement(AID_USE_ARTIFACT_RAN);
                 break;
             }
         }
@@ -1464,6 +1475,7 @@ arti_invoke(struct obj *obj)
         case CONFLICT:
             if (on)
                 pline("You feel like a rabble-rouser.");
+                if (Role_if(PM_CAVEMAN)) award_achiemevent(AID_USE_ARTIFACT_CAV);
             else
                 pline("You feel the tension decrease around you.");
             break;
@@ -1471,6 +1483,7 @@ arti_invoke(struct obj *obj)
             if (on) {
                 float_up();
                 spoteffects(FALSE);
+                if (Role_if(PM_BARBARIAN)) award_achievement(AID_USE_ARTIFACT_BAR);
             } else
                 float_down(I_SPECIAL | TIMEOUT, W_ARTI);
             break;
@@ -1478,9 +1491,11 @@ arti_invoke(struct obj *obj)
             if (BInvis || Blind)
                 goto nothing_special;
             newsym(u.ux, u.uy);
-            if (on)
+            if (on) {
                 pline("Your body takes on a %s transparency...",
                       Hallucination ? "normal" : "strange");
+                if (Role_if(PM_ARCHEOLOGIST)) award_achievement(AID_USE_ARTIFACT_ARC);
+            }
             else
                 pline("Your body seems to unfade...");
             break;

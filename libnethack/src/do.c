@@ -6,6 +6,8 @@
 
 #include "hack.h"
 #include "lev.h"
+#include "achieve.h"
+#include "achieve.h"
 
 static void trycall(struct obj *);
 static void dosinkring(struct obj *);
@@ -1083,6 +1085,7 @@ goto_level(d_level * newlevel, boolean at_stairs, boolean falling,
             else if (at_stairs &&
                      (near_capacity() > UNENCUMBERED || Punished || Fumbling)) {
                 pline("You fall down the %s.", at_ladder ? "ladder" : "stairs");
+                add_achievement_progress(AID_FALL_DOWN_STAIRS, 1);
                 if (Punished) {
                     drag_down();
                     if (carried(uball)) {
@@ -1205,6 +1208,7 @@ goto_level(d_level * newlevel, boolean at_stairs, boolean falling,
             You_hear("groans and moans everywhere.");
         } else
             pline("It is hot here.  You smell smoke...");
+        award_achievement(AID_ENTER_GEHENNOM);
     }
 
     if (familiar) {
@@ -1278,6 +1282,8 @@ goto_level(d_level * newlevel, boolean at_stairs, boolean falling,
     /* assume this will always return TRUE when changing level */
     in_out_region(level, u.ux, u.uy);
     pickup(1);
+    if (moves <= 2000 && Is_stronghold(&u.uz))
+        award_achievement(AID_DIG_FOR_VICTORY);
 }
 
 

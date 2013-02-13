@@ -4,6 +4,7 @@
 
 #include "hack.h"
 #include "edog.h"
+#include "achieve.h"
 
 static const char tools[] = { ALL_CLASSES, ALLOW_NONE, NONE_ON_COMMA,
     TOOL_CLASS, WEAPON_CLASS, 0
@@ -78,7 +79,9 @@ use_camera(struct obj *obj)
              beam_hit(dx, dy, COLNO, FLASHED_LIGHT, NULL, NULL, obj,
                       NULL)) != 0) {
         obj->ox = u.ux, obj->oy = u.uy;
-        flash_hits_mon(mtmp, obj);
+        flash_hits = flash_hits_mon(mtmp, obj);
+        if (flash_hits && is_endgamenasty(mtmp->data))
+            award_achievement(AID_BLIND_RIDER_WITH_CAMERA);
     }
     return 1;
 }
@@ -1483,6 +1486,9 @@ use_tinning_kit(struct obj *obj)
 
     if ((can = mksobj(level, TIN, FALSE, FALSE)) != 0) {
         static const char you_buy_it[] = "You tin it, you bought it!";
+
+        if (corpse->corpsenm == PM_WIZARD_OF_YENDOR)
+            award_achievement(AID_TIN_OF_RODNEY);
 
         can->corpsenm = corpse->corpsenm;
         can->cursed = obj->cursed;

@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 #define NOINVSYM        '#'
 #define CONTAINED_SYM   '>'     /* designator for inside a container */
@@ -284,19 +285,23 @@ addinv_core1(struct obj *obj)
         if (u.uhave.amulet)
             impossible("already have amulet?");
         u.uhave.amulet = 1;
+        award_achievement(AID_GET_AMULET);
         historic_event(!obj->known, "gained the Amulet of Yendor!");
     } else if (obj->otyp == CANDELABRUM_OF_INVOCATION) {
         if (u.uhave.menorah)
             impossible("already have candelabrum?");
         u.uhave.menorah = 1;
+        award_achievement(AID_GET_CANDELABRUM);
     } else if (obj->otyp == BELL_OF_OPENING) {
         if (u.uhave.bell)
             impossible("already have silver bell?");
         u.uhave.bell = 1;
+        award_achievement(AID_GET_BELL);
     } else if (obj->otyp == SPE_BOOK_OF_THE_DEAD) {
         if (u.uhave.book)
             impossible("already have the book?");
         u.uhave.book = 1;
+        award_achievement(AID_GET_BOOK);
     } else if (obj->oartifact == ART_RING_OF_POWER){
         if (u.uhave.ring_of_power) impossible("already have ring of power?");
         u.uhave.ring_of_power = 1;
@@ -365,6 +370,15 @@ added:
     addinv_core2(obj);
     carry_obj_effects(obj);     /* carrying affects the obj */
     update_inventory();
+    if (obj->oclass == AMULET_CLASS) {
+        int amulets_gotten = 0;
+        int amulets_exist = 0;
+        for (int atyp = AMULET_OF_ESP; atyp <= AMULET_OF_YENDOR; atyp++) {
+            amulets_exist++;
+            if (in_possession(atyp)) amulets_gotten++;
+        }
+        if (amulets_gotten == amulets_exist) award_achievement(AID_GET_ALL_AMULETS);
+    }
     return obj;
 }
 
