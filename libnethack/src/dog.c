@@ -4,6 +4,7 @@
 
 #include "hack.h"
 #include "edog.h"
+#include "achieve.h"
 
 static int pet_type(void);
 
@@ -119,6 +120,11 @@ make_familiar(struct obj *otmp, xchar x, xchar y, boolean quietly)
         mtmp->weapon_check = NEED_HTH_WEAPON;
         mon_wield_item(mtmp);
     }
+
+    if (mtmp->mtame &&
+        (mtmp->mdata == &mons[PM_SUCCUBUS] || 
+         mtmp->mdata == &mons[PM_INCUBUS])
+        award_achievement(AID_TAME_FOOCUBUS);
     return mtmp;
 }
 
@@ -833,6 +839,8 @@ tamedog(struct monst *mtmp, struct obj *obj)
         /* `obj' is now obsolete */
     }
 
+    if (mtmp2->data == &mons[PM_SUCCUBUS] || mtmp->data == &mons[PM_INCUBUS])
+        award_achievement(AID_TAME_FOOCUBUS);
     newsym(mtmp2->mx, mtmp2->my);
     if (attacktype(mtmp2->data, AT_WEAP)) {
         mtmp2->weapon_check = NEED_HTH_WEAPON;
