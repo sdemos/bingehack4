@@ -29,14 +29,14 @@ static int use_candle(struct obj **);
 static int use_lamp(struct obj *);
 static int light_cocktail(struct obj *);
 static int use_tinning_kit(struct obj *);
-static boolean use_figurine(struct obj *obj);
+static int use_figurine(struct obj **obj);
 static int use_grease(struct obj *);
 static int use_trap(struct obj *);
 static int use_stone(struct obj *);
 static int set_trap(void);      /* occupation callback */
 static int use_whip(struct obj *);
 static int use_pole(struct obj *);
-static int use_cream_pie(struct obj *);
+static int use_cream_pie(struct obj **);
 static int use_grapple(struct obj *);
 static boolean figurine_location_checks(struct obj *, coord *, boolean);
 static boolean uhave_graystone(void);
@@ -1794,21 +1794,22 @@ figurine_location_checks(struct obj *obj, coord * cc, boolean quietly)
 }
 
 
-static boolean
-use_figurine(struct obj *obj)
+static int
+use_figurine(struct obj **objp)
 {
     xchar x, y;
     coord cc;
     schar dx, dy, dz;
+    struct obj *obj = *objp;
 
     if (u.uswallow) {
         /* can't activate a figurine while swallowed */
         if (!figurine_location_checks(obj, NULL, FALSE))
-            return FALSE;
+            return 0;
     }
     if (!getdir(NULL, &dx, &dy, &dz)) {
         flags.move = multi = 0;
-        return FALSE;
+        return 0;
     }
 
     x = u.ux + dx;
@@ -1818,7 +1819,7 @@ use_figurine(struct obj *obj)
 
     /* Passing FALSE arg here will result in messages displayed */
     if (!figurine_location_checks(obj, &cc, FALSE))
-        return FALSE;
+        return 0;
     pline("You %s and it transforms.",
           (dx || dy) ? "set the figurine beside you" :
           (Is_airlevel(&u.uz) || Is_waterlevel(&u.uz) ||
@@ -1829,8 +1830,8 @@ use_figurine(struct obj *obj)
     make_familiar(obj, cc.x, cc.y, FALSE);
     stop_timer(obj->olev, FIG_TRANSFORM, obj);
     useup(obj);
-
-    return TRUE;
+    *objp = NULL;
+    return 1;
 }
 
 static const char lubricables[] = { ALL_CLASSES, ALLOW_NONE, 0 };
@@ -2511,11 +2512,12 @@ use_pole(struct obj *obj)
 
 
 static int
-use_cream_pie(struct obj *obj)
+use_cream_pie(struct obj **objp)
 {
     boolean wasblind = Blind;
     boolean wascreamed = u.ucreamed;
     boolean several = FALSE;
+    struct obj *obj = *objp;
 
     if (obj->quan > 1L) {
         several = TRUE;
@@ -2545,6 +2547,7 @@ use_cream_pie(struct obj *obj)
     }
     obj_extract_self(obj);
     delobj(obj);
+    *objp = NULL;
     return 1;
 }
 
@@ -2911,7 +2914,7 @@ doapply(struct obj *obj)
         }
         break;
     case CREAM_PIE:
-        res = use_cream_pie(obj);
+        res = use_cream_pie(&obj);
         break;
     case BULLWHIP:
         res = use_whip(obj);
@@ -3030,10 +3033,7 @@ doapply(struct obj *obj)
         goto xit;
 
     case FIGURINE:
-        if (use_figurine(obj))
-            obj = NULL; /* used up */
-        else
-            res = 0;
+        res = use_figurine(&obj);
         break;
     case UNICORN_HORN:
         use_unicorn_horn(obj);
