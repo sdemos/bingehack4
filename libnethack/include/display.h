@@ -38,7 +38,7 @@
 
 # define sensemon(mon) (mon->dlevel == level && \
                        (tp_sensemon(mon) || Detect_monsters || \
-                        MATCH_WARN_OF_MON(mon)))
+                        (Detect_fish && is_swimmer(mon->data)) ||MATCH_WARN_OF_MON(mon)))
 
 /*
  * mon_warning() is used to warn of any dangerous monsters in your
@@ -175,9 +175,8 @@
 
 # define covers_traps(lev,xx,yy)        covers_objects(lev,xx,yy)
 
-
 /*
- * tmp_at() control calls.
+ * tmp_at() display styles
  */
 # define DISP_BEAM    (-1)      /* Keep all symbols showing & clean up at end. */
 # define DISP_FLASH   (-2)      /* Clean up each symbol before displaying new
@@ -186,13 +185,12 @@
                                    visible. */
 # define DISP_OBJECT  (-4)      /* Like flash, but shows an object instead of
                                    an effect symbol */
-# define DISP_CHANGE  (-5)      /* Change symbol. */
-# define DISP_END     (-6)      /* Clean up. */
-# define DISP_FREEMEM (-7)      /* Free all memory during exit only. */
-
 
 /* Total number of cmap indices in the shield_static[] array. */
 # define SHIELD_COUNT 21
 # define NUM_ZAP 8      /* number of zap beam types */
+
+/* Used for temporary display symbols. */
+struct tmp_sym;
 
 #endif /* DISPLAY_H */
