@@ -4,6 +4,8 @@
 
 #include "hack.h"
 
+int step_count_for_acheivements = 0;
+
 int (*afternmv) (void);
 int (*occupation) (void);
 

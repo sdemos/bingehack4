@@ -1549,6 +1549,12 @@ domove(schar dx, schar dy, schar dz)
         invocation_message();
         if (!Blind)
             level->locations[u.ux][u.uy].mem_stepped = 1;
+        // Achievement Tracking
+        step_count_for_acheivements++;
+        if (!(step_count_for_achievements % 100)) {
+            add_achievement_progress(AID_WALK_5K, 100);
+            add_achievement_progress(AID_WALK_10K, 100);
+        }
     }
 
     if (Punished)       /* put back ball and chain */
