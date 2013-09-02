@@ -190,6 +190,7 @@ panic(const char *str, ...)
     if (program_state.panicking++)
         terminate();    /* avoid loops - this should never happen */
 
+    // You crashed the game! Here's an achievemnt!
     award_achievement(AID_CRASH);
 
     raw_print(program_state.
@@ -986,6 +987,17 @@ done_noreturn(int how)
     if (flags.end_disclose != DISCLOSE_NO_WITHOUT_PROMPT)
         disclose(how, taken, money_cnt(invent) + hidden_gold());
 
+    if (how != PANICKED && u.ulevel >=15) {
+        if (!u.uconduct.food) award_achievement(AID_CONDUCT_FOODLESS);
+        if (!u.uconduct.unvegetarian) award_achievement(AID_CONDUCT_VEGETARIAN);
+        if (!u.uconduct.gnostic) award_achievement(AID_CONDUCT_ATHIEST);
+        if (!u.uconduct.killer) award_achievement(AID_CONDUCT_PACIFIST);
+        if (!u.uconduct.weaphit) award_achievement(AID_CONDUCT_WEAPONLESS);
+        if (!u.uconduct.literate) award_achievement(AID_CONDUCT_ILLITERATE);
+        if (!u.uconduct.polypiles && !u.uconduct.polyselfs)
+            award_achievement(AID_CONDUCT_NOPOLYMORPH);
+        if (num_genocides() == 0) award_achievement(AID_CONDUCT_GENOCIDELESS);
+        if (!u.uconduct.wishes) award_achievement(AID_CONDUCT_WISHLESS);
     /* calculate score, before creating bones [container gold] */
     umoney = money_cnt(invent) + hidden_gold();
     u.urexp = calc_score(how, FALSE, umoney);

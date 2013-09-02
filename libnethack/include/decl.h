@@ -5,6 +5,8 @@
 #ifndef DECL_H
 # define DECL_H
 
+extern int step_count_for_achievements;
+
 extern int (*occupation) (void);
 extern int (*afternmv) (void);
 

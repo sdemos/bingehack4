@@ -579,9 +579,11 @@ drinksink(void)
             pline("But it quiets down.");
         break;
     case 8:
+        int oldlevel = u.ulevel;
         pline("Yuk, this water tastes awful.");
         more_experienced(1, 0);
         newexplevel();
+        if (u.ulevel > oldlevel) award_achievement(AID_TRIVIAL_LEVEL_UP);
         break;
     case 9:
         pline("Gaggg... this tastes like sewage!  You vomit.");
