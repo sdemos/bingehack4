@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 static void maybe_wail(void);
 static int moverock(schar dx, schar dy);
@@ -1550,7 +1551,7 @@ domove(schar dx, schar dy, schar dz)
         if (!Blind)
             level->locations[u.ux][u.uy].mem_stepped = 1;
         // Achievement Tracking
-        step_count_for_acheivements++;
+        step_count_for_achievements++;
         if (!(step_count_for_achievements % 100)) {
             add_achievement_progress(AID_WALK_5K, 100);
             add_achievement_progress(AID_WALK_10K, 100);

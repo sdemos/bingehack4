@@ -373,7 +373,8 @@ added:
     if (obj->oclass == AMULET_CLASS) {
         int amulets_gotten = 0;
         int amulets_exist = 0;
-        for (int atyp = AMULET_OF_ESP; atyp <= AMULET_OF_YENDOR; atyp++) {
+        int atyp = 0;
+        for (atyp = AMULET_OF_ESP; atyp <= AMULET_OF_YENDOR; atyp++) {
             amulets_exist++;
             if (in_possession(atyp)) amulets_gotten++;
         }

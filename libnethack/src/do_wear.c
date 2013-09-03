@@ -1594,7 +1594,7 @@ find_ac(void)
         iflags.botl = 1;
     }
     if (u.uac < 0) award_achievement(AID_TERRIBLE_AC);
-    if (u.uac >= 40 && magic_negation(%youmonst) >= 3)
+    if (u.uac >= 40 && magic_negation(&youmonst) >= 3)
         award_achievement(AID_AWESOME_AC);
 }
 

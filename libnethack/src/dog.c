@@ -122,8 +122,8 @@ make_familiar(struct obj *otmp, xchar x, xchar y, boolean quietly)
     }
 
     if (mtmp->mtame &&
-        (mtmp->mdata == &mons[PM_SUCCUBUS] || 
-         mtmp->mdata == &mons[PM_INCUBUS])
+        (mtmp->data == &mons[PM_SUCCUBUS] || 
+         mtmp->data == &mons[PM_INCUBUS]))
         award_achievement(AID_TAME_FOOCUBUS);
     return mtmp;
 }

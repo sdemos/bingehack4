@@ -7,7 +7,7 @@
 #include <errno.h>
 
 #include "hack.h"
-#include "configfile.h"
+#include "config.h"
 #include "achieve.h"
 
 static bool s

@@ -5,6 +5,7 @@
 /* Code for drinking from fountains. */
 
 #include "hack.h"
+#include "achieve.h"
 
 static void dowatersnakes(void);
 static void dowaterdemon(void);
@@ -510,6 +511,7 @@ drinksink(void)
 {
     struct obj *otmp;
     struct monst *mtmp;
+    int oldlevel = u.ulevel;
 
     if (Levitation) {
         floating_above("sink");
@@ -579,7 +581,6 @@ drinksink(void)
             pline("But it quiets down.");
         break;
     case 8:
-        int oldlevel = u.ulevel;
         pline("Yuk, this water tastes awful.");
         more_experienced(1, 0);
         newexplevel();

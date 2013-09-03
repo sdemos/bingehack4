@@ -79,7 +79,7 @@ use_camera(struct obj *obj)
              beam_hit(dx, dy, COLNO, FLASHED_LIGHT, NULL, NULL, obj,
                       NULL)) != 0) {
         obj->ox = u.ux, obj->oy = u.uy;
-        flash_hits = flash_hits_mon(mtmp, obj);
+        int flash_hits = flash_hits_mon(mtmp, obj);
         if (flash_hits && is_endgamenasty(mtmp->data))
             award_achievement(AID_BLIND_RIDER_WITH_CAMERA);
     }
