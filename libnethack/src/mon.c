@@ -1863,7 +1863,7 @@ cleanup:
     if (mdat->mlet == S_KOP) award_achievement(AID_FOUGHT_THE_LAW);
 #endif
     if (
-        (isdprince(mdat) || isdlord(mdat)) &&
+        (is_dprince(mdat) || is_dlord(mdat)) &&
         (mvitals[PM_JUIBLEX].mvflags & G_GONE) &&
         (mvitals[PM_ORCUS].mvflags & G_GONE) &&
         (mvitals[PM_BAALZEBUB].mvflags & G_GONE) &&
