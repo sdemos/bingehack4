@@ -4,6 +4,7 @@
 
 #include "hack.h"
 #include "lev.h"
+#include "achieve.h"
 
 static void find_lev_obj(struct level *lev);
 static void restlevchn(struct memfile *mf);
@@ -615,6 +616,9 @@ dorecover(struct memfile *mf)
     /* but before doredraw().  */
     vision_reset();
     vision_full_recalc = 1;     /* recompute vision (not saved) */
+
+    /* Restore step count (truncated to multiples of 100) for steps achieve */
+    step_count_for_achievements = get_achievement_progress(AID_WALK_10K);
 
     /* help the window port get it's display charset/tiles sorted out */
     notify_levelchange();

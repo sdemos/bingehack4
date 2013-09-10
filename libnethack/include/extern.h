@@ -699,6 +699,8 @@ extern int count_buc(struct obj *, int);
 extern void carry_obj_effects(struct obj *);
 extern const char *currency(long);
 extern void silly_thing(const char *, struct obj *);
+extern boolean in_possession(int);
+extern boolean otype_on(int, struct obj *);
 
 /* ### light.c ### */
 

@@ -10,10 +10,11 @@
 #include "config.h"
 #include "achieve.h"
 
-static bool s
+static bool s;
 
 void
-init_achievements(){
+init_achievements()
+{
     int i;
     for (i = 0; i < sizeof(achievement_progress); i++) {
         achievement_progress[i] = 0;

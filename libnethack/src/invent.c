@@ -2603,4 +2603,22 @@ display_binventory(int x, int y, boolean as_if_seen)
     return n;
 }
 
+boolean
+otype_on(register int type, register struct obj *objchn)
+{
+    while (objchn) {
+        if (objchn->otyp == type) return TRUE;
+        if (Has_contents(objchn) && otype_on(type, objchn->cobj))
+            return TRUE;
+        objchn = objchn->nobj;
+    }
+    return FALSE;
+}
+
+boolean
+in_possession(register int type)
+{
+    return otype_on(type, invent);
+}
+
 /*invent.c*/

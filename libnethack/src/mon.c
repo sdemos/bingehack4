@@ -5,6 +5,7 @@
 #include "hack.h"
 #include "mfndpos.h"
 #include "edog.h"
+#include "achieve.h"
 #include <ctype.h>
 
 static boolean restrap(struct monst *);
@@ -1849,6 +1850,26 @@ cleanup:
         pline("You feel guilty...");
     }
 
+    /* kill related achievements */
+    if (u.uhp <= 5 && u.ulevel >= 5) award_achievement(AID_SKIN_OF_TEETH);
+    if (is_undead(mdat)) add_achievement_progress(AID_KILL_UNDEAD, 1);
+    if (mdat == &mons[PM_DEMOGORGON]) award_achievement(AID_KILL_DEMOGORGON);
+    if (mdat == &mons[PM_GHOST]) add_achievement_progress(AID_KILL_GHOSTS, 1);
+    if (mdat == &mons[PM_GRID_BUG]) add_achievement_progress(AID_KILL_GRID_BUGS, 1);
+    if (mdat == &mons[PM_WOODCHUCK]) award_achievement(AID_KILL_WOODCHUCK);
+    if (mdat->mlet == S_ORC) add_achievement_progress(AID_KILL_ORCS, 1);
+    if (mdat->mlet == S_DRAGON) add_achievement_progress(AID_KILL_DRAGONS, 1);
+#ifdef KOPS
+    if (mdat->mlet == S_KOP) award_achievement(AID_FOUGHT_THE_LAW);
+#endif
+    if (
+        (isdprince(mdat) || isdlord(mdat)) &&
+        (mvitals[PM_JUIBLEX].mvflags & G_GONE) &&
+        (mvitals[PM_ORCUS].mvflags & G_GONE) &&
+        (mvitals[PM_BAALZEBUB].mvflags & G_GONE) &&
+        (mvitals[PM_ASMODEUS].mvflags & G_GONE)
+       ) award_achievement(AID_KILL_GUARANTEED_DEMONS);
+
     /* give experience points */
     tmp = experience(mtmp, (int)mvitals[mndx].died + 1);
     more_experienced(tmp, 0);
@@ -1900,6 +1921,7 @@ mon_to_stone(struct monst *mtmp)
         if (newcham(mtmp, &mons[PM_STONE_GOLEM], FALSE, FALSE)) {
             if (canseemon(mtmp))
                 pline("Now it's %s.", an(mtmp->data->mname));
+            award_achievement(AID_STONE_A_GOLEM);
         } else {
             if (canseemon(mtmp))
                 pline("... and returns to normal.");
@@ -2546,6 +2568,10 @@ newcham(struct monst *mtmp, const struct permonst *mdat,
             }
         }
     }
+
+    if (mtmp->mtame &&
+        (mdat == &mons[PM_SUCCUBUS] || mdat == &mons[PM_INCUBUS])
+       ) award_achievement(AID_TAME_FOOCUBUS);
 
     return 1;
 }

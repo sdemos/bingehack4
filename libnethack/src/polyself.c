@@ -11,6 +11,7 @@
  */
 
 #include "hack.h"
+#include "achieve.h"
 
 static void polyman(const char *, const char *);
 static void break_armor(void);
@@ -601,6 +602,7 @@ polymon(int mntmp)
     exercise(A_CON, FALSE);
     exercise(A_WIS, TRUE);
     encumber_msg();
+    award_achievement(AID_POLYMORPH_SELF);
     return 1;
 }
 

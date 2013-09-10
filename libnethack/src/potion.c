@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 boolean notonhead = FALSE;
 
@@ -1741,6 +1742,7 @@ dodip(struct obj *potion)
         /* KMH, balance patch -- acid is particularly unstable */
         if (obj->cursed || obj->otyp == POT_ACID || !rn2(10)) {
             pline("BOOM!  They explode!");
+            award_achievement(AID_ALCHEMIZE_EXPLOSION);
             wake_nearby();
             exercise(A_STR, FALSE);
             if (!breathless(youmonst.data) || haseyes(youmonst.data))
@@ -1757,6 +1759,8 @@ dodip(struct obj *potion)
 
         if ((mixture = mixtype(obj, potion)) != 0) {
             obj->otyp = mixture;
+            if (mixture == POT_GAIN_LEVEL)
+                award_achievement(AID_ALCHEMIZE_GAIN_LEVEL);
         } else {
             switch (obj->odiluted ? 1 : rnd(8)) {
             case 1:
@@ -2034,6 +2038,7 @@ djinni_from_bottle(struct obj *obj)
         verbalize("I am in your debt.  I will grant one wish!");
         makewish();
         mongone(mtmp);
+        add_achievement_progress(AID_DJINN_WISHES, 1);
         break;
     case 1:
         verbalize("Thank you for freeing me!");

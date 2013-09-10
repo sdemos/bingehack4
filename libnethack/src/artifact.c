@@ -1475,7 +1475,7 @@ arti_invoke(struct obj *obj)
         case CONFLICT:
             if (on)
                 pline("You feel like a rabble-rouser.");
-                if (Role_if(PM_CAVEMAN)) award_achiemevent(AID_USE_ARTIFACT_CAV);
+                if (Role_if(PM_CAVEMAN)) award_achievement(AID_USE_ARTIFACT_CAV);
             else
                 pline("You feel the tension decrease around you.");
             break;

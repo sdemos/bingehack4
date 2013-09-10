@@ -7,6 +7,7 @@
  */
 
 #include "hack.h"
+#include "achieve.h"
 
 static void check_here(boolean);
 static boolean n_or_more(const struct obj *);
@@ -1807,6 +1808,7 @@ observe_quantum_cat(struct obj *box)
 
     }
     box->owt = weight(box);
+    award_achievement(AID_SCHROEDINGERS_CAT);
     return;
 }
 
