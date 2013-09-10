@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 extern const char *const destroy_strings[];     /* from zap.c */
 
@@ -3338,8 +3339,10 @@ disarm_squeaky_board(struct trap *ttmp, schar dx, schar dy)
     level->locations[u.ux + dx][u.uy + dy].mem_trap = NO_TRAP;
     deltrap(level, ttmp);
     newsym(u.ux + dx, u.uy + dy);
+    int oldlevel = u.ulevel;
     more_experienced(1, 5);
     newexplevel();
+    if (u.ulevel > oldlevel) award_achievement(AID_TRIVIAL_LEVEL_UP);
     return 1;
 }
 

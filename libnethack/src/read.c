@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 /* KMH -- Copied from pray.c; this really belongs in a header file */
 #define DEVOUT 14
@@ -699,6 +700,9 @@ seffects(struct obj *sobj, boolean * known)
                 adj_abon(otmp, s);
                 *known = otmp->known;
             }
+
+            if (otmp->spe >= (is_elven_armor(otmp) ? 7 : 5))
+                award_achievement(AID_ENCHANT_HIGH);
 
             if ((otmp->spe > (special_armor ? 5 : 3)) &&
                 (special_armor || !rn2(7)))
@@ -1477,6 +1481,8 @@ do_class_genocide(void)
                     kill_genocided_monsters();
                     update_inventory(); /* eggs & tins */
                     pline("Wiped out all %s.", nam);
+                    add_achievement_progress(AID_GENOCIDES, 1);
+
                     if (Upolyd && i == u.umonnum) {
                         u.mh = -1;
                         if (Unchanging) {
@@ -1745,6 +1751,7 @@ punish(struct obj *sobj)
             set_bc(1);  /* set up ball and chain variables */
         newsym(u.ux, u.uy);     /* see ball&chain if can't see self */
     }
+    award_achievement(AID_PUNISHMENT);
 }
 
 void

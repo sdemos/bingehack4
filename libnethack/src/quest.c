@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 /*  quest dungeon branch routines. */
 
@@ -285,6 +286,7 @@ chat_with_leader(void)
             exercise(A_WIS, TRUE);
             Qstat(got_quest) = TRUE;
             historic_event(FALSE, "embarked upon an epic quest.");
+            award_achievement(AID_START_QUEST);
         }
     }
 }

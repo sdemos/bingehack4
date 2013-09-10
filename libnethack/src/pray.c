@@ -4,6 +4,7 @@
 
 #include "hack.h"
 #include "epri.h"
+#include "achieve.h"
 
 static int prayer_done(void);
 static struct obj *worst_cursed_item(void);
@@ -531,6 +532,7 @@ god_zaps_you(aligntyp resp_god)
         else {
             pline("You bask in its black glow for a minute...");
             godvoice(resp_god, "I believe it not!");
+            award_achievement(AID_SURVIVE_GOD_DISINTEGRATION);
         }
         if (Is_astralevel(&u.uz) || Is_sanctum(&u.uz)) {
             /* one more try for high altars */
@@ -864,6 +866,8 @@ pleased(aligntyp g_align)
             if (trouble > 0)
                 fix_worst_trouble(trouble);
         case 0:
+            if (trouble > 0)
+                award_achievement(AID_UNCARING_GOD);
             break;      /* your god blows you off, too bad */
         }
     }
@@ -1370,6 +1374,8 @@ dosacrifice(struct obj *otmp)
                                "offered the Amulet of Yendor to %s and ascended"
                                " to the status of Demigod%s!", u_gname(),
                                flags.female ? "dess" : "");
+                award_achievement(AID_ASCEND);
+                add_achievement_progress(AID_ASCEND_THRICE, 1);
                 done(ASCENDED);
             }
         }
@@ -1474,6 +1480,8 @@ dosacrifice(struct obj *otmp)
                               hcolor(u.ualign.type ==
                                      A_LAWFUL ? "white" : u.ualign.
                                      type ? "black" : "gray"));
+
+                    award_achievement(AID_CONVERT_ALTAR);
 
                     if (rnl(u.ulevel) > 6 && u.ualign.record > 0 &&
                         rnd(u.ualign.record) > (3 * ALIGNLIM) / 4)

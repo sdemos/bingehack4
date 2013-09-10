@@ -3,7 +3,9 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
+#include "achieve.h"
 /* KMH -- Differences between the three weapon slots.
  *
  * The main weapon (uwep):
@@ -738,6 +740,8 @@ chwepon(struct obj *otmp, int amount)
     uwep->spe += amount;
     if (amount > 0)
         uwep->cursed = 0;
+
+    if (uwep->spe >= 7) award_achievement(AID_ENCHANT_HIGH);
 
     /* 
      * Enchantment, which normally improves a weapon, has an

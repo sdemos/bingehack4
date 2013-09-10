@@ -1209,8 +1209,10 @@ poly_obj(struct obj *obj, int id)
     boolean can_merge = (id == STRANGE_OBJECT);
     int obj_location = obj->where;
 
-    if (obj->otyp == BOULDER && In_sokoban(&u.uz))
+    if (obj->otyp == BOULDER && In_sokoban(&u.uz)) {
         change_luck(-1);        /* Sokoban guilt */
+        award_achievement(AID_SOKOBAN_DESTROY_BOULDER);
+    }
     if (id == STRANGE_OBJECT) { /* preserve symbol */
         int try_limit = 3;
 
@@ -1780,8 +1782,11 @@ zappable(struct obj *wand)
         return 0;
     }
 
-    if (wand->spe == 0)
+    if (wand->spe == 0) {
         pline("You wrest one last charge from the worn-out wand.");
+        if (wand->otyp == WAN_WISHING && wand->recharged > 0)
+            award_achievement(AID_WREST_FROM_RECHARGED_WOW);
+    }
     wand->spe--;
     return 1;
 }
@@ -3008,6 +3013,8 @@ zap_hit_mon(struct monst *mon, int type, int nd, struct obj **ootmp)
                 sho_shieldeff = TRUE;
                 break;
             }
+            if (mon->data == &mons[PM_WIZARD_OF_YENDOR])
+                award_achievement(AID_ZAP_RODNEY_WITH_DEATH);
             type = -1;  /* so they don't get saving throws */
         } else {
             struct obj *otmp2;
@@ -3082,8 +3089,10 @@ zap_hit_mon(struct monst *mon, int type, int nd, struct obj **ootmp)
     }
     if (sho_shieldeff)
         shieldeff(mon->mx, mon->my);
-    if (is_hero_spell(type) && (Role_if(PM_KNIGHT) && u.uhave.questart))
+    if (is_hero_spell(type) && (Role_if(PM_KNIGHT) && u.uhave.questart)) {
         tmp *= 2;
+        award_achievement(AID_USE_ARTIFACT_KNI);
+    }
     if (tmp > 0 && type >= 0 &&
         resist(mon, type < ZT_SPELL(0) ? WAND_CLASS : '\0', 0, NOTELL))
         tmp /= 2;
@@ -3814,8 +3823,10 @@ void
 fracture_rock(struct obj *obj)
 {
     /* A little Sokoban guilt... */
-    if (obj->otyp == BOULDER && In_sokoban(&u.uz) && !flags.mon_moving)
+    if (obj->otyp == BOULDER && In_sokoban(&u.uz) && !flags.mon_moving) {
         change_luck(-1);
+        award_achievement(AID_SOKOBAN_DESTROY_BOULDER);
+    }
 
     obj->otyp = ROCK;
     obj->quan = (long)rn1(60, 7);

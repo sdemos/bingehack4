@@ -4,6 +4,7 @@
 
 #include "hack.h"
 #include "eshk.h"
+#include "achieve.h"
 
 static boolean known_hitum(struct monst *, int *, const struct attack *, schar,
                            schar);
@@ -604,6 +605,7 @@ hmon_hitmon(struct monst *mon, struct obj *obj, int thrown)
     boolean silvermsg = FALSE, silverobj = FALSE;
     boolean valid_weapon_attack = FALSE;
     boolean unarmed = !uwep && !uarm && !uarms;
+    boolean smashed_mirror = FALSE;
     int jousting = 0;
     int wtype;
     struct obj *monwep;
@@ -795,6 +797,7 @@ hmon_hitmon(struct monst *mon, struct obj *obj, int thrown)
                         unarmed = FALSE;        /* avoid obj==0 confusion */
                         get_dmg_bonus = FALSE;
                         hittxt = TRUE;
+                        smashed_mirror = TRUE;
                     }
                     tmp = 1;
                     break;
@@ -818,6 +821,8 @@ hmon_hitmon(struct monst *mon, struct obj *obj, int thrown)
                               withwhat);
                         if (!munstone(mon, TRUE))
                             minstapetrify(mon, TRUE);
+                        if (!resists_ston(mon) && !poly_when_stoned(mon->data))
+                            award_achievement(AID_RUBBER_CHICKEN);
                         if (resists_ston(mon))
                             break;
                         /* note: hp may be <= 0 even if munstoned==TRUE */
@@ -937,6 +942,8 @@ hmon_hitmon(struct monst *mon, struct obj *obj, int thrown)
                         pline(obj->otyp == CREAM_PIE ? "Splat!" : "Splash!");
                         setmangry(mon);
                     }
+                    if (obj->otyp == CREAM_PIE && attacktype(mon->data, AT_GAZE))
+                        award_achievement(AID_BLIND_GAZER_WITH_PIE);
                     if (thrown)
                         obfree(obj, NULL);
                     else
@@ -1097,8 +1104,10 @@ hmon_hitmon(struct monst *mon, struct obj *obj, int thrown)
        artifact has already done to max HP */
     if (mon->mhp > mon->mhpmax)
         mon->mhp = mon->mhpmax;
-    if (mon->mhp < 1)
+    if (mon->mhp < 1) {
         destroyed = TRUE;
+        if (smashed_mirror) award_achievement(AID_MIRROR_SMASH_KILL);
+    }
     if (mon->mtame && (!mon->mflee || mon->mfleetim) && tmp > 0) {
         abuse_dog(mon);
         monflee(mon, 10 * rnd(tmp), FALSE, FALSE);

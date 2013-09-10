@@ -3,6 +3,7 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include "hack.h"
+#include "achieve.h"
 
 static schar delay;     /* moves left for this spell */
 
@@ -237,11 +238,30 @@ deadbook(struct obj *book2)
             mkinvokearea();
             u.uevent.invoked = 1;
             historic_event(FALSE, "performed the invocation.");
-            /* in case you haven't killed the Wizard yet, behave as if you just 
+            /* in case you haven't killed the Wizard yet, behave as if you just
                did */
             u.uevent.udemigod = 1;      /* wizdead() */
             if (!u.udg_cnt || u.udg_cnt > soon)
                 u.udg_cnt = soon;
+
+            /* Ascension Kit achievement checking */
+            /* It is still possible to move this to addinv to make it more 
+             * achieveable, just like in the other note for this achievement */
+            if (
+                in_possession(WAN_DIGGING) &&
+                in_possession(SCR_GOLD_DETECTION) &&
+                in_possession(RIN_LEVITATION) &&
+                in_possession(POT_FULL_HEALING) &&
+                (
+                 in_possession(AMULET_OF_REFLECTION) ||
+                 in_possession(AMULET_OF_LIFE_SAVING)
+                ) &&
+                in_possession(UNICORN_HORN) &&
+                in_possession(LUCKSTONE) &&
+                in_possession(TOWEL) &&
+                in_possession(CAN_OF_GREASE) &&
+                in_possession(BAG_OF_HOLDING)
+               ) award_achievement(AID_ASCENSION_KIT);
         } else {        /* at least one artifact not prepared properly */
             pline("You have a feeling that something is amiss...");
             goto raise_dead;
@@ -783,6 +803,9 @@ spelleffects(int spell, boolean atme)
      */
     skill = spell_skilltype(pseudo->otyp);
     role_skill = P_SKILL(skill);
+
+    if (chance = 100 && spellev(spell) >=7)
+        award_achievement(AID_MASTER_CASTER);
 
     switch (pseudo->otyp) {
         /* 
