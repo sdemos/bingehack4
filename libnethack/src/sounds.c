@@ -418,6 +418,8 @@ whatthefoxsays()
         return "goes fraka-kaka-kaka-kaka-kow!";
     case 5:
         return "goes a-hee-ahee ha-hee!";
+    default:
+        return "goes pa-pa-pa-pa-pa-pa-how-did-you-get-here";
     }
 }
 
