@@ -173,6 +173,7 @@ draw_msgwin(void)
 static void
 more(void)
 {
+    return;
     int key, attr = A_NORMAL;
     int cursx, cursy;
 
