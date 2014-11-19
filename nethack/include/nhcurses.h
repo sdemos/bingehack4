@@ -145,6 +145,7 @@ struct interface_flags {
     nh_bool ingame;
     nh_bool draw_frame;
     nh_bool draw_sidebar;
+    nh_bool draw_lvlitems;
     nh_bool status3;    /* draw the 3 line status instead of the classic 2
                            lines */
     nh_bool color;      /* the terminal has color capability */
@@ -185,6 +186,7 @@ struct settings {
     nh_bool blink;      /* show multiple symbols for each location by blinking */
     nh_bool floorcolor; /* draw stepped-on information for the floor */
     nh_bool sidebar;    /* draw the inventory sidebar */
+    nh_bool lvlitems;   /* draw window with items on screen */
     nh_bool frame;      /* draw a frame around the window sections */
     nh_bool status3;    /* draw 3 line status */
 };

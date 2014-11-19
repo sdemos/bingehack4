@@ -162,7 +162,8 @@ layout_game_windows(void)
 {
     int statusheight;
 
-    ui_flags.draw_frame = ui_flags.draw_sidebar = FALSE;
+    ui_flags.draw_lvlitems = ui_flags.draw_frame = ui_flags.draw_sidebar 
+        = FALSE;
     statusheight = settings.status3 ? 3 : 2;
 
     /* 3 variable elements contribute to height: - message area (most
@@ -175,6 +176,9 @@ layout_game_windows(void)
 
     if (settings.sidebar && COLS >= COLNO + 20)
         ui_flags.draw_sidebar = TRUE;
+
+    if (settings.lvlitems && LINES >= ROWNO + 20)
+        ui_flags.draw_lvlitems = TRUE;
 
     /* create subwindows */
     if (ui_flags.draw_frame) {

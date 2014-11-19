@@ -95,6 +95,8 @@ struct nh_option_desc curses_options[] = {
     {"invweight", "show item weights in the inventory", OPTTYPE_BOOL, {VTRUE}},
     {"keymap", "alter the key to command mapping",
      (enum nh_opttype)OPTTYPE_KEYMAP, {0}},
+    {"lvlitems", "draws a window with seen items on current level",
+     OPTTYPE_BOOL, {VTRUE}},
     {"menu_headings", "display style for menu headings", OPTTYPE_ENUM,
      {(void *)A_REVERSE}},
     {"msgheight", "message window height", OPTTYPE_INT, {(void *)8}},
@@ -130,6 +132,7 @@ struct nh_boolopt_map boolopt_map[] = {
     {"frame", &settings.frame},
     {"hilite_pet", &settings.hilite_pet},
     {"invweight", &settings.invweight},
+    {"lvlitems", &settings.lvlitems},
     {"scores_own", &settings.end_own},
     {"showexp", &settings.showexp},
     {"showscore", &settings.showscore},
@@ -146,7 +149,7 @@ static nh_bool
 option_change_callback(struct nh_option_desc *option)
 {
     if (!strcmp(option->name, "frame") || !strcmp(option->name, "status3") ||
-        !strcmp(option->name, "sidebar")) {
+        !strcmp(option->name, "sidebar") || !strcmp(option->name, "lvlitems")) {
         rebuild_ui();
         return TRUE;
     } else if (!strcmp(option->name, "showexp") ||
