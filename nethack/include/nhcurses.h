@@ -294,7 +294,7 @@ extern struct interface_flags ui_flags;
 extern nh_bool interrupt_multi, game_is_running;
 extern const char quit_chars[];
 extern struct nh_window_procs curses_windowprocs;
-extern WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar;
+extern WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar, *lvlitems;
 extern struct curses_drawing_info *default_drawing, *cur_drawing;
 extern struct nh_player_info player;
 extern int initrole, initrace, initgend, initalign;
@@ -417,6 +417,10 @@ extern nh_bool curses_list_items(struct nh_objitem *items, int icount,
                                  nh_bool invent);
 extern nh_bool curses_list_items_nonblocking(struct nh_objitem *items,
                                              int icount, nh_bool invent);
+extern void cleanup_sidebar(nh_bool dealloc);
+
+/* lvlitems.c */
+extern void draw_lvlitems(void);
 extern void cleanup_sidebar(nh_bool dealloc);
 
 /* status.c */

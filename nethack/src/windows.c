@@ -22,7 +22,7 @@ extern int _nc_unicode_locale(void);
 # define _nc_unicode_locale() (1)       /* ... as a macro, for example ... */
 #endif
 
-WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar;
+WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar, *lvlitems;
 struct gamewin *firstgw, *lastgw;
 int orig_cursor;
 const char quit_chars[] = " \r\n\033";
@@ -142,18 +142,19 @@ draw_frame(void)
     whline(basewin, ACS_HLINE, COLNO);
     mvwaddch(basewin, ui_flags.viewheight + 1, COLNO + 1, ACS_LRCORNER);
 
-    if (!ui_flags.draw_sidebar)
-        return;
+    if (ui_flags.draw_sidebar) {
+        mvwaddch(basewin, 0, COLNO + 1, ACS_TTEE);
+        whline(basewin, ACS_HLINE, COLS - COLNO - 3);
+        mvwaddch(basewin, 0, COLS - 1, ACS_URCORNER);
 
-    mvwaddch(basewin, 0, COLNO + 1, ACS_TTEE);
-    whline(basewin, ACS_HLINE, COLS - COLNO - 3);
-    mvwaddch(basewin, 0, COLS - 1, ACS_URCORNER);
+        mvwaddch(basewin, ui_flags.viewheight + 1, COLNO + 1, ACS_BTEE);
+        whline(basewin, ACS_HLINE, COLS - COLNO - 3);
+        mvwaddch(basewin, ui_flags.viewheight + 1, COLS - 1, ACS_LRCORNER);
 
-    mvwaddch(basewin, ui_flags.viewheight + 1, COLNO + 1, ACS_BTEE);
-    whline(basewin, ACS_HLINE, COLS - COLNO - 3);
-    mvwaddch(basewin, ui_flags.viewheight + 1, COLS - 1, ACS_LRCORNER);
+        mvwvline(basewin, 1, COLS - 1, ACS_VLINE, ui_flags.viewheight);
+    }
 
-    mvwvline(basewin, 1, COLS - 1, ACS_VLINE, ui_flags.viewheight);
+    // TODO: Frame around lvlitems window
 }
 
 
@@ -223,6 +224,14 @@ create_game_windows(void)
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO - 3, 1,
                        COLNO + 2);
 
+        if (ui_flags.draw_lvlitems)
+            lvlitems =
+                derwin(basewin,
+                       LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
+                       COLNO, 
+                       ui_flags.msgheight + ROWNO + ui_flags.viewheight + 5, 
+                       1);
+
         draw_frame();
     } else {
         msgwin = newwin(ui_flags.msgheight, COLNO, 0, 0);
@@ -233,6 +242,13 @@ create_game_windows(void)
         if (ui_flags.draw_sidebar)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO, 0, COLNO);
+
+        if (ui_flags.draw_lvlitems)
+            lvlitems =
+                derwin(basewin,
+                       LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
+                       COLNO, ui_flags.msgheight + ROWNO + ui_flags.viewheight,
+                       0);
     }
 
     keypad(mapwin, TRUE);
@@ -242,6 +258,8 @@ create_game_windows(void)
     leaveok(statuswin, TRUE);
     if (sidebar)
         leaveok(sidebar, TRUE);
+    if (lvlitems)
+        leaveok(lvlitems, TRUE);
 
     ui_flags.ingame = TRUE;
     redraw_game_windows();
@@ -265,6 +283,10 @@ resize_game_windows(void)
         delwin(sidebar);
         sidebar = NULL;
     }
+    if (lvlitems) {
+        delwin(lvlitems);
+        lvlitems = NULL;
+    }
 
     /* ncurses might have automatically changed the window sizes in resizeterm
        while trying to do the right thing. Of course no size other than COLNO x 
@@ -284,6 +306,13 @@ resize_game_windows(void)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO - 3, 1,
                        COLNO + 2);
+        if (ui_flags.draw_lvlitems)
+            lvlitems =
+                derwin(basewin,
+                       LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
+                       COLNO, 
+                       ui_flags.msgheight + ROWNO + ui_flags.viewheight + 5, 
+                       1);
         draw_frame();
     } else {
         mvwin(msgwin, 0, 0);
@@ -294,11 +323,19 @@ resize_game_windows(void)
         if (ui_flags.draw_sidebar)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO, 0, COLNO);
+        if (ui_flags.draw_lvlitems)
+            lvlitems =
+                derwin(basewin,
+                       LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
+                       COLNO, ui_flags.msgheight + ROWNO + ui_flags.viewheight,
+                       0);
     }
 
     leaveok(statuswin, TRUE);
     if (sidebar)
         leaveok(sidebar, TRUE);
+    if (lvlitems)
+        leaveok(lvlitems, TRUE);
 
     redraw_game_windows();
     doupdate();
@@ -316,7 +353,11 @@ destroy_game_windows(void)
             cleanup_sidebar(FALSE);
             delwin(sidebar);
         }
-        msgwin = mapwin = statuswin = sidebar = NULL;
+        if (lvlitems || ui_flags.draw_lvlitems) {
+            cleanup_lvlitems(FALSE);
+            delwin(lvlitems);
+        }
+        msgwin = mapwin = statuswin = sidebar = lvlitems = NULL;
     }
 
     ui_flags.ingame = FALSE;
@@ -350,6 +391,11 @@ redraw_game_windows(void)
             wnoutrefresh(sidebar);
         }
 
+        if (lvlitems) {
+            redrawwin(lvlitems);
+            wnoutrefresh(lvlitems);
+        }
+
         draw_frame();
     }
 
@@ -373,6 +419,7 @@ rebuild_ui(void)
         draw_map(player.x, player.y);
         curses_update_status(&player);
         draw_sidebar();
+        draw_lvlitems();
 
         redraw_game_windows();
     } else if (basewin) {

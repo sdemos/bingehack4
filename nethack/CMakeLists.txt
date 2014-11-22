@@ -27,6 +27,7 @@ set (NH_CURSES_SRC
     src/gameover.c
     src/getline.c
     src/keymap.c
+    src/lvlitems.c
     src/map.c
     src/menu.c
     src/messages.c
