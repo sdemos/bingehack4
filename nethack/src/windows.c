@@ -22,7 +22,7 @@ extern int _nc_unicode_locale(void);
 # define _nc_unicode_locale() (1)       /* ... as a macro, for example ... */
 #endif
 
-WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar, *lvlitems;
+WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar, *legend;
 struct gamewin *firstgw, *lastgw;
 int orig_cursor;
 const char quit_chars[] = " \r\n\033";
@@ -154,7 +154,7 @@ draw_frame(void)
         mvwvline(basewin, 1, COLS - 1, ACS_VLINE, ui_flags.viewheight);
     }
 
-    // TODO: Frame around lvlitems window
+    // TODO: Frame around legend window
 }
 
 
@@ -163,7 +163,7 @@ layout_game_windows(void)
 {
     int statusheight;
 
-    ui_flags.draw_lvlitems = ui_flags.draw_frame = ui_flags.draw_sidebar 
+    ui_flags.draw_legend = ui_flags.draw_frame = ui_flags.draw_sidebar 
         = FALSE;
     statusheight = settings.status3 ? 3 : 2;
 
@@ -178,8 +178,8 @@ layout_game_windows(void)
     if (settings.sidebar && COLS >= COLNO + 20)
         ui_flags.draw_sidebar = TRUE;
 
-    if (settings.lvlitems && LINES >= ROWNO + 20)
-        ui_flags.draw_lvlitems = TRUE;
+    if (settings.legend && LINES >= ROWNO + 20)
+        ui_flags.draw_legend = TRUE;
 
     /* create subwindows */
     if (ui_flags.draw_frame) {
@@ -224,8 +224,8 @@ create_game_windows(void)
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO - 3, 1,
                        COLNO + 2);
 
-        if (ui_flags.draw_lvlitems)
-            lvlitems =
+        if (ui_flags.draw_legend)
+            legend =
                 derwin(basewin,
                        LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
                        COLNO, 
@@ -243,8 +243,8 @@ create_game_windows(void)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO, 0, COLNO);
 
-        if (ui_flags.draw_lvlitems)
-            lvlitems =
+        if (ui_flags.draw_legend)
+            legend =
                 derwin(basewin,
                        LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
                        COLNO, ui_flags.msgheight + ROWNO + ui_flags.viewheight,
@@ -258,8 +258,8 @@ create_game_windows(void)
     leaveok(statuswin, TRUE);
     if (sidebar)
         leaveok(sidebar, TRUE);
-    if (lvlitems)
-        leaveok(lvlitems, TRUE);
+    if (legend)
+        leaveok(legend, TRUE);
 
     ui_flags.ingame = TRUE;
     redraw_game_windows();
@@ -283,9 +283,9 @@ resize_game_windows(void)
         delwin(sidebar);
         sidebar = NULL;
     }
-    if (lvlitems) {
-        delwin(lvlitems);
-        lvlitems = NULL;
+    if (legend) {
+        delwin(legend);
+        legend = NULL;
     }
 
     /* ncurses might have automatically changed the window sizes in resizeterm
@@ -306,8 +306,8 @@ resize_game_windows(void)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO - 3, 1,
                        COLNO + 2);
-        if (ui_flags.draw_lvlitems)
-            lvlitems =
+        if (ui_flags.draw_legend)
+            legend =
                 derwin(basewin,
                        LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
                        COLNO, 
@@ -323,8 +323,8 @@ resize_game_windows(void)
         if (ui_flags.draw_sidebar)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO, 0, COLNO);
-        if (ui_flags.draw_lvlitems)
-            lvlitems =
+        if (ui_flags.draw_legend)
+            legend =
                 derwin(basewin,
                        LINES - ui_flags.msgheight - ROWNO - ui_flags.viewheight,
                        COLNO, ui_flags.msgheight + ROWNO + ui_flags.viewheight,
@@ -334,8 +334,8 @@ resize_game_windows(void)
     leaveok(statuswin, TRUE);
     if (sidebar)
         leaveok(sidebar, TRUE);
-    if (lvlitems)
-        leaveok(lvlitems, TRUE);
+    if (legend)
+        leaveok(legend, TRUE);
 
     redraw_game_windows();
     doupdate();
@@ -353,11 +353,11 @@ destroy_game_windows(void)
             cleanup_sidebar(FALSE);
             delwin(sidebar);
         }
-        if (lvlitems || ui_flags.draw_lvlitems) {
-            cleanup_lvlitems(FALSE);
-            delwin(lvlitems);
+        if (legend || ui_flags.draw_legend) {
+            cleanup_legend(FALSE);
+            delwin(legend);
         }
-        msgwin = mapwin = statuswin = sidebar = lvlitems = NULL;
+        msgwin = mapwin = statuswin = sidebar = legend = NULL;
     }
 
     ui_flags.ingame = FALSE;
@@ -391,9 +391,9 @@ redraw_game_windows(void)
             wnoutrefresh(sidebar);
         }
 
-        if (lvlitems) {
-            redrawwin(lvlitems);
-            wnoutrefresh(lvlitems);
+        if (legend) {
+            redrawwin(legend);
+            wnoutrefresh(legend);
         }
 
         draw_frame();
@@ -419,7 +419,7 @@ rebuild_ui(void)
         draw_map(player.x, player.y);
         curses_update_status(&player);
         draw_sidebar();
-        draw_lvlitems();
+        draw_legend();
 
         redraw_game_windows();
     } else if (basewin) {

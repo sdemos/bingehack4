@@ -5,22 +5,22 @@
 #include "nhcurses.h"
 
 
-static struct nh_objitems *lvlitems_list;
-static int lvlitems_icount;
+static struct nh_objitems *legend_list;
+static int legend_icount;
 
 
 void
-draw_lvlitems(void)
+draw_legend(void)
 {
-    if (!ui_flags.draw_lvlitems)
+    if (!ui_flags.draw_legend)
         return;
 
-    mvwaddstr(lvlitems, 0, 0, "This is my new window");
+    mvwaddstr(legend, 0, 0, "This is my new window");
 
-    wnoutrefresh(lvlitems);
+    wnoutrefresh(legend);
 }
 
 void
-cleanup_lvlitems(nh_bool dealloc)
+cleanup_legend(nh_bool dealloc)
 {
 }

@@ -145,7 +145,7 @@ struct interface_flags {
     nh_bool ingame;
     nh_bool draw_frame;
     nh_bool draw_sidebar;
-    nh_bool draw_lvlitems;
+    nh_bool draw_legend;
     nh_bool status3;    /* draw the 3 line status instead of the classic 2
                            lines */
     nh_bool color;      /* the terminal has color capability */
@@ -186,7 +186,7 @@ struct settings {
     nh_bool blink;      /* show multiple symbols for each location by blinking */
     nh_bool floorcolor; /* draw stepped-on information for the floor */
     nh_bool sidebar;    /* draw the inventory sidebar */
-    nh_bool lvlitems;   /* draw window with items on screen */
+    nh_bool legend;   /* draw window with items on screen */
     nh_bool frame;      /* draw a frame around the window sections */
     nh_bool status3;    /* draw 3 line status */
 };
@@ -294,7 +294,7 @@ extern struct interface_flags ui_flags;
 extern nh_bool interrupt_multi, game_is_running;
 extern const char quit_chars[];
 extern struct nh_window_procs curses_windowprocs;
-extern WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar, *lvlitems;
+extern WINDOW *basewin, *mapwin, *msgwin, *statuswin, *sidebar, *legend;
 extern struct curses_drawing_info *default_drawing, *cur_drawing;
 extern struct nh_player_info player;
 extern int initrole, initrace, initgend, initalign;
@@ -419,8 +419,8 @@ extern nh_bool curses_list_items_nonblocking(struct nh_objitem *items,
                                              int icount, nh_bool invent);
 extern void cleanup_sidebar(nh_bool dealloc);
 
-/* lvlitems.c */
-extern void draw_lvlitems(void);
+/* legend.c */
+extern void draw_legend(void);
 extern void cleanup_sidebar(nh_bool dealloc);
 
 /* status.c */
