@@ -421,7 +421,7 @@ extern void cleanup_sidebar(nh_bool dealloc);
 
 /* legend.c */
 extern void draw_legend(void);
-extern void cleanup_sidebar(nh_bool dealloc);
+extern void cleanup_legend(nh_bool dealloc);
 
 /* status.c */
 extern void curses_update_status(struct nh_player_info *pi);
