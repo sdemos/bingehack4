@@ -31,6 +31,7 @@ static struct nh_window_procs curses_replay_windowprocs = {
     NULL,
     NULL,
     curses_list_items_nonblocking,
+    NULL, //TODO: Implement this for replay?
     dummy_update_screen,
     curses_raw_print,
     NULL,

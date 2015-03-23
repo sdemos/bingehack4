@@ -314,14 +314,54 @@ make_player_info(struct nh_player_info *pi)
     api_exit();
 }
 
+/* Transform level->objlist into nh_dbuf_entry for passing to legend
+ */
+void
+make_legend_list(struct nh_dbuf_entry **items, int *icount)
+{
+    // the objlist in the level struct is a giant linked list
+    struct obj *obj;
+    int count = 0;
+
+    // this could be faster with more memory usage, because I think we can
+    // assume that the number of objects on a level won't exceed the number
+    // of possible tiles on a level (COLNO*ROWNO)
+
+    // figure out how many objs there are in objlist before malloc
+    //for (obj = level->objlist; obj; obj = obj->nobj, count++) continue;
+
+    //// now we malloc that many and go through it again to find all the obj items
+    //*items = malloc(count * sizeof(struct nh_dbuf_entry));
+    //int i;
+    //for (i = 0, obj = level->objlist; obj; obj = obj->nobj, i++)
+    //    (*items)[i].obj = obj->otyp;
+
+    // figure out how many things that we want to list there are on the level
+#define isobj(x) (0 < x && x < NUM_OBJECTS)
+    int i, j;
+    for (i = 0; i < COLNO; i++)
+        for (j = 0; j < ROWNO; j++)
+            if (isobj(level->locations[i][j].mem_obj)) count++;
+    *items = xmalloc(count * sizeof(struct nh_dbuf_entry));
+    for (i = 0; i < COLNO; i++)
+        for (j = 0; j < ROWNO; j++)
+            if (isobj(level->locations[i][j].mem_obj))
+                (*items)[i].obj = level->locations[i][j].mem_obj;
+
+    *icount = count;
+}
 
 void
 bot(void)
 {
     struct nh_player_info pi;
+    struct nh_dbuf_entry *legend_list;
+    int llcount;
 
     make_player_info(&pi);
+    make_legend_list(&legend_list, &llcount);
     update_status(&pi);
+    update_legend(legend_list, llcount);
     iflags.botl = 0;
 }
 

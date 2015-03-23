@@ -69,6 +69,7 @@ struct nh_window_procs server_windowprocs = {
     srv_display_menu,
     srv_display_objects,
     srv_list_items,
+    NULL, //TODO: Define the server implementation of update_legend
     srv_update_screen,
     srv_raw_print,
     srv_query_key,
@@ -92,6 +93,7 @@ struct nh_window_procs server_alt_windowprocs = {
     NULL,
     NULL,
     srv_alt_list_items,
+    NULL, // TODO: What is this? Do I need it for legend?
     srv_alt_update_screen,
     srv_alt_raw_print,
     NULL,

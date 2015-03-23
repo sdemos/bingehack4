@@ -421,6 +421,7 @@ extern void cleanup_sidebar(nh_bool dealloc);
 
 /* legend.c */
 extern void draw_legend(void);
+extern void curses_update_legend(struct nh_dbuf_entry *items, int icount);
 extern void cleanup_legend(nh_bool dealloc);
 
 /* status.c */

@@ -791,4 +791,11 @@ doverhistory(void)
     return 0;
 }
 
+int
+nh_legend_objects(struct obj *objs)
+{
+    objs = level->objlist;
+    return 0;
+}
+
 /*pager.c*/

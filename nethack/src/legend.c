@@ -4,29 +4,46 @@
 
 #include "nhcurses.h"
 
-static struct nh_objitems *legend_list;
+static struct nh_dbuf_entry *legend_list;
 static int legend_icount;
 
 void
 draw_legend(void)
 {
-//    if (!ui_flags.draw_legend)
-//        return;
+    if (!ui_flags.draw_legend)
+        return;
 
     werase(legend);
 
-    mvwaddstr(legend, 0, 0, "This is my new window");
+    const struct nh_drawing_info *di = nh_get_drawing_info();
+ 
+    wattron(legend, A_UNDERLINE);
+    mvwaddstr(legend, 0, 0, "Legend:");
+    wattroff(legend, A_UNDERLINE);
+
+    // print out things that are on the screen here
+    int i;
+    for (i = 0; i < legend_icount; i++) {
+        mvwaddstr(legend, i+1, 0, di->objects[legend_list[i].obj].symname);
+    }
+    //char buf[16];
+    //sprintf(buf, "%i %i", legend_list->obj, legend_icount);
+    //mvwaddstr(legend, 1, 0, buf);
 
     wnoutrefresh(legend);
 }
 
 void
+curses_update_legend(struct nh_dbuf_entry * items, int icount)
+{
+    legend_list = items;
+    legend_icount = icount;
+    draw_legend();
+}
+
+void
 cleanup_legend(nh_bool dealloc)
 {
-    if (dealloc) {
-        free(legend_list);
-        legend_list = NULL;
-    }
     delwin(legend);
     legend = NULL;
 }

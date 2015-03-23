@@ -119,6 +119,7 @@ static const struct nh_window_procs def_replay_windowprocs = {
     replay_display_menu,
     replay_display_objects,
     NULL,       /* no function required for list_items */
+    NULL, // TODO: Do I need something here for legend??
     replay_update_screen,
     NULL,       /* always use a given raw_print */
     replay_query_key,

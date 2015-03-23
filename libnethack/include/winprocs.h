@@ -10,6 +10,7 @@ extern struct nh_window_procs windowprocs;
 # define win_pause_output (*windowprocs.win_pause)
 # define display_buffer (*windowprocs.win_display_buffer)
 # define update_status (*windowprocs.win_update_status)
+# define update_legend (*windowprocs.win_update_legend)
 # define print_message (*windowprocs.win_print_message)
 # define update_screen (*windowprocs.win_update_screen)
 # define raw_print (*windowprocs.win_raw_print)

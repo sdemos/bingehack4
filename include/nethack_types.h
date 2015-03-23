@@ -610,6 +610,7 @@ struct nh_window_procs {
                                 int, struct nh_objresult *);
         nh_bool(*win_list_items) (struct nh_objitem * items, int icount,
                                   nh_bool invent);
+    void (*win_update_legend) (struct nh_dbuf_entry *, int);
     void (*win_update_screen) (struct nh_dbuf_entry dbuf[ROWNO][COLNO], int ux,
                                int uy);
     void (*win_raw_print) (const char *str);

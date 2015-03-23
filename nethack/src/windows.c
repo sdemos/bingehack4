@@ -36,6 +36,7 @@ struct nh_window_procs curses_windowprocs = {
     curses_display_menu,
     curses_display_objects,
     curses_list_items,
+    curses_update_legend,
     curses_update_screen,
     curses_raw_print,
     curses_query_key,
@@ -234,8 +235,10 @@ create_game_windows(void)
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO - 3, 1,
                        COLNO + 2);
 
-        if (ui_flags.draw_legend)
-            legend = derwin(basewin, 10, COLNO, ui_flags.viewheight - 10, 1);
+        if (ui_flags.draw_legend) {
+            int gameheight = ui_flags.msgheight + ROWNO + statusheight + 4;
+            legend = derwin(basewin, ui_flags.viewheight - gameheight, COLNO, gameheight, 1);
+        }
 
         draw_frame();
     } else {
@@ -248,8 +251,10 @@ create_game_windows(void)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO, 0, COLNO);
 
-        if (ui_flags.draw_legend)
-            legend = derwin(basewin, 10, COLNO, ui_flags.viewheight - 10, 0);
+        if (ui_flags.draw_legend) {
+            int gameheight = ui_flags.msgheight + ROWNO + statusheight;
+            legend = derwin(basewin, ui_flags.viewheight - gameheight, COLNO, gameheight, 0);
+        }
     }
 
     keypad(mapwin, TRUE);
@@ -308,8 +313,10 @@ resize_game_windows(void)
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO - 3, 1,
                        COLNO + 2);
 
-        if (ui_flags.draw_legend)
-            legend = derwin(basewin, 8, COLNO, ui_flags.viewheight - 8, 1);
+        if (ui_flags.draw_legend) {
+            int gameheight = ui_flags.msgheight + ROWNO + statusheight + 4;
+            legend = derwin(basewin, ui_flags.viewheight - gameheight, COLNO, gameheight, 1);
+        }
 
         draw_frame();
     } else {
@@ -322,8 +329,10 @@ resize_game_windows(void)
             sidebar =
                 derwin(basewin, ui_flags.viewheight, COLS - COLNO, 0, COLNO);
 
-        if (ui_flags.draw_legend)
-            legend = derwin(basewin, 8, COLNO, ui_flags.viewheight-8, 0);
+        if (ui_flags.draw_legend) {
+            int gameheight = ui_flags.msgheight + ROWNO + statusheight;
+            legend = derwin(basewin, ui_flags.viewheight - gameheight, COLNO, gameheight, 0);
+        }
     }
 
     leaveok(statuswin, TRUE);
@@ -387,7 +396,7 @@ redraw_game_windows(void)
         }
 
         if (legend) {
-            draw_legend();
+            //draw_legend();
             redrawwin(legend);
             wnoutrefresh(legend);
         }
