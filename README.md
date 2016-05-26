@@ -4,14 +4,25 @@
 
 ## Description ##
 
-The latest iteration of a long-lived line of patches against NetHack by Computer Science House members.
-For information about in-game features and changes, please refer to [our GitHub Wiki](https://github.com/ComputerScienceHouse/bingehack4/wiki).
+The latest iteration of a long-lived line of patches against NetHack by
+Computer Science House members.  For information about in-game features and
+changes, please refer to [our GitHub
+Wiki](https://github.com/ComputerScienceHouse/bingehack4/wiki).
 
 ## Development ##
 
-Development occurs on developer forks and they issue pull requests, which the main developers Russ Harmon ([eatnumber1](https://github.com/eatnumber1)) and Chris Lockfort ([clockfort](https://github.com/clockfort)) review in a timely fashion, examining code quality, testing for possible problems, and addressing other miscellaneous issues like game balance.
+Development occurs on developer forks and they issue pull requests, which the
+main developers Russ Harmon ([eatnumber1](https://github.com/eatnumber1)) and
+Chris Lockfort ([clockfort](https://github.com/clockfort)) review in a timely
+fashion, examining code quality, testing for possible problems, and addressing
+other miscellaneous issues like game balance.
 
-There are two branches that exist in the main repository; 'master' is for the version of NetHack deployed on [our own server](telnet://games-ng.csh.rit.edu), while 'upstream' exists so that we can retain a symbiotic relationship with upstream NetHack4; fixes for bugs that we have found go upstream from this branch, and fixes they issue themselves also first appear on this branch before being merged in to our own master.
+There are two branches that exist in the main repository; 'master' is for the
+version of NetHack deployed on [our own server](telnet://games-ng.csh.rit.edu),
+while 'upstream' exists so that we can retain a symbiotic relationship with
+upstream NetHack4; fixes for bugs that we have found go upstream from this
+branch, and fixes they issue themselves also first appear on this branch before
+being merged in to our own master.
 
 ### Requirements ###
 
@@ -23,8 +34,9 @@ There are two branches that exist in the main repository; 'master' is for the ve
 * flex
 * zlib
 
-We use and support Linux and OS X as development environments, as well as both gcc and [clang][clang].
-We test our client game terminal support for functionality on:
+We use and support Linux and OS X as development environments, as well as both
+gcc and [clang][clang].  We test our client game terminal support for
+functionality on:
 
 * OS X/Terminal.app
 * Linux/Gnome Terminal
