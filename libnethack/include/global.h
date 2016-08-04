@@ -6,6 +6,11 @@
 #ifndef GLOBAL_H
 # define GLOBAL_H
 
+# if defined(__linux__) && defined(__GNUC__) && !defined(_GNU_SOURCE)
+/* ensure _GNU_SOURCE is defined before including any system headers */
+#  define _GNU_SOURCE
+# endif
+
 # include <stdio.h>
 # include <stdarg.h>
 
@@ -68,15 +73,12 @@ typedef schar xchar;
  * Please don't change the order.  It does matter.
  */
 
-# ifdef AIMAKE_BUILDOS_MSWin32
+# ifdef UNIX
+#  include "unixconf.h"
+# endif
+
+# ifdef WIN32
 #  include "ntconf.h"
-# else
-#  if defined(AIMAKE_BUILDOS_darwin) || defined(AIMAKE_BUILDOS_linux) || \
-      defined(AIMAKE_BUILDOS_freebsd)
-#   include "unixconf.h"
-#  else
-#   error Could not detect your OS. Update the logic in global.h.
-#  endif 
 # endif
 
 /* Displayable name of this port; don't redefine if defined in *conf.h */
@@ -90,6 +92,12 @@ typedef schar xchar;
 #    define PORT_SUB_ID "tty"
 #   endif
 #  endif
+# endif
+
+# ifdef _MSC_VER
+#  define NORETURN __declspec(noreturn)
+# else
+#  define NORETURN __attribute__((noreturn))
 # endif
 
 /* Used for consistency checks of various data files; declare it here so

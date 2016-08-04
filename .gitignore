@@ -15,3 +15,10 @@ install_manifest.txt
 tags
 TAGS
 libnethack/util/savemap.txt
+Build
+Build.hi
+_build
+aibuild
+cmake_build
+manual_build
+aimakeshit
